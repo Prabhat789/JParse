@@ -8,6 +8,12 @@ espressoCore = "3.5.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2023.08.00"
+jetbrainsKotlinJvm = "1.9.0"
+kspGradle = "1.9.0-1.0.12"
+kspSerializer = "1.9.0-1.0.12"
+gson = "20211205"
+kPoet = "1.14.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,7 +31,15 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+kspApi = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "kspSerializer" }
+kotlinPoetKsp = { group = "com.squareup", name = "kotlinpoet-ksp", version.ref = "kPoet" }
+kotlinPoet = { group = "com.squareup", name = "kotlinpoet", version.ref = "kPoet" }
+json = { group = "org.json", name = "json", version.ref = "gson" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+
+kspGradle = { id = "com.google.devtools.ksp", version.ref = "kspGradle"}
 

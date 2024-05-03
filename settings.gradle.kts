@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "JParse"
+rootProject.name = "JParseLibrary"
 include(":app")
- 
+include(":jparse")
