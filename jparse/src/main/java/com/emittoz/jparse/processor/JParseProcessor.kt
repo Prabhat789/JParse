@@ -1,6 +1,7 @@
 package com.emittoz.jparse.processor
 
 import com.emittoz.jparse.annotations.Serializable
+import com.emittoz.jparse.parser.FunctionProvider
 import com.emittoz.jparse.serialise.Serialise
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
@@ -31,16 +32,21 @@ class JParseProcessor(
     private fun generateSource(kClass: KSClassDeclaration) {
         val className = kClass.simpleName.toString()
         val packageName = kClass.packageName.toString()
-        val fileSpec = FileSpec.builder(packageName = packageName, fileName = "$NAME_PREFIX$className")
-            .addType(
-                TypeSpec.classBuilder("$NAME_PREFIX$className")
-                    .addSuperinterface(
-                        Serialise::class.asClassName()
-                            .parameterizedBy(ClassName(packageName = packageName, className))
-                    )
-                    .build()
-                    // add functions here
-            ).build()
+        val functionProvider = FunctionProvider(kClass)
+        val fromJsonWithStringArgs = functionProvider.fromJsonWithStringArgs()
+        val fromJsonWithJsonArgs = functionProvider.fromJsonWithJsonArgs()
+        val fileSpec =
+            FileSpec.builder(packageName = packageName, fileName = "$NAME_PREFIX$className")
+                .addType(
+                    TypeSpec.classBuilder("$NAME_PREFIX$className")
+                        .addSuperinterface(
+                            Serialise::class.asClassName()
+                                .parameterizedBy(ClassName(packageName = packageName, className))
+                        )
+                        .addFunction(fromJsonWithStringArgs)
+                        .addFunction(fromJsonWithJsonArgs)
+                        .build()
+                ).build()
         fileSpec.writeTo(codeGenerator, true)
     }
 
