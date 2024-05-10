@@ -107,6 +107,34 @@ class FunctionProvider(
             .build()
     }
 
+    fun toJsonStringFromModel(): FunSpec {
+        return FunSpec.builder(name = FUNC_TO_JSON_STRING)
+            .addModifiers(KModifier.OVERRIDE)
+            .addParameter(ARG_OBJECT_MODEL, ClassName(packageName = packageName, fileName).copy(nullable = true))
+            .returns(String::class.asTypeName())
+            .addStatement(
+                functionUtils.ifStatement(
+                    input = ARG_OBJECT_MODEL,
+                    compareTo = NULL_VALUE
+                ).prependIndent()
+            )
+            .addStatement(
+                functionUtils.throwException(
+                    exceptionName = IllegalArgumentException::class.simpleName,
+                    msg = NULL_MODEL_EXCEPTION
+                ).prependIndent()
+            )
+            .addStatement(CLOSE_CURLY_BRACE.prependIndent())
+            .addStatement(
+                functionUtils.returnStatement(
+                    returnFunction = true,
+                    funcName = FUNC_TO_JSON,
+                    argument = ARG_OBJECT_MODEL,
+                    toString = true
+                )
+            ).build()
+    }
+
     private fun hasAnnotation(property: KSPropertyDeclaration): Boolean {
         return property.annotations.any {
             it.annotationType.resolve().declaration.qualifiedName?.asString() ==
@@ -116,10 +144,14 @@ class FunctionProvider(
 
     companion object {
         const val FUNC_FROM_JSON = "fromJson"
+        const val FUNC_TO_JSON_STRING = "toJsonString"
+        const val FUNC_TO_JSON = "toJson"
+        const val ARG_OBJECT_MODEL = "model"
         const val ARG_JSON_STRING = "json"
         const val ARG_JSON_OBJECT = "jsonObject"
         const val NULL_VALUE = "null"
         const val CLOSE_CURLY_BRACE = "}"
         const val NULL_JSON_EXCEPTION = "\"JSON content should not be null.\""
+        const val NULL_MODEL_EXCEPTION = "\"Model content should not be null.\""
     }
 }

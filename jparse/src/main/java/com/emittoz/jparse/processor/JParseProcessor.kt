@@ -35,6 +35,7 @@ class JParseProcessor(
         val functionProvider = FunctionProvider(kClass)
         val fromJsonWithStringArgs = functionProvider.fromJsonWithStringArgs()
         val fromJsonWithJsonArgs = functionProvider.fromJsonWithJsonArgs()
+        val toJsonStringFromModel = functionProvider.toJsonStringFromModel()
         val fileSpec =
             FileSpec.builder(packageName = packageName, fileName = "$NAME_PREFIX$className")
                 .addType(
@@ -45,6 +46,7 @@ class JParseProcessor(
                         )
                         .addFunction(fromJsonWithStringArgs)
                         .addFunction(fromJsonWithJsonArgs)
+                        .addFunction(toJsonStringFromModel)
                         .build()
                 ).build()
         fileSpec.writeTo(codeGenerator, true)
