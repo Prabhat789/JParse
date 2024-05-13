@@ -135,6 +135,40 @@ class FunctionProvider(
             ).build()
     }
 
+    fun toJsonObjectFromModel(): FunSpec {
+        val properties: List<KSPropertyDeclaration> = kClass.getDeclaredProperties().toList()
+        return FunSpec.builder(name = FUNC_TO_JSON)
+            .addModifiers(KModifier.OVERRIDE)
+            .addParameter(
+                ARG_OBJECT_MODEL,
+                ClassName(packageName = packageName, fileName).copy(nullable = true)
+            )
+            .returns(JSONObject::class.asTypeName())
+            .addStatement(
+                functionUtils.ifStatement(
+                    input = ARG_OBJECT_MODEL,
+                    compareTo = NULL_VALUE
+                ).prependIndent()
+            )
+            .addStatement(
+                functionUtils.throwException(
+                    exceptionName = IllegalArgumentException::class.simpleName,
+                    msg = NULL_MODEL_EXCEPTION
+                ).prependIndent()
+            )
+            .addStatement(CLOSE_CURLY_BRACE.prependIndent())
+            .addStatement("${DEFAULT_INDENTATION}with($ARG_OBJECT_MODEL) {")
+            .addStatement("${INDENTATION_8}return JSONObject().apply {").apply {
+                properties.forEachIndexed { _, prop ->
+                    if (!hasAnnotation(prop)) {
+                        // Handle props here.
+                    }
+                }
+            }
+            .addStatement("$INDENTATION_8}")
+            .addStatement("$DEFAULT_INDENTATION}").build()
+    }
+
     private fun hasAnnotation(property: KSPropertyDeclaration): Boolean {
         return property.annotations.any {
             it.annotationType.resolve().declaration.qualifiedName?.asString() ==
