@@ -6,11 +6,16 @@ import com.emittoz.jparse.parser.FunctionUtils.Companion.DOT
 import com.emittoz.jparse.parser.FunctionUtils.Companion.JSON_OBJECT
 import com.emittoz.jparse.parser.FunctionUtils.Companion.OPEN_BRACE
 import com.emittoz.jparse.processor.JParseProcessor.Companion.NAME_PREFIX
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.Dynamic
+import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.TypeVariableName
+import com.squareup.kotlinpoet.WildcardTypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 
@@ -64,6 +69,20 @@ class ParseJson {
                 getObject(propertyName = jsonPropertyName, typeName = returnType)
             }
         }
+    }
+
+    fun buildJsonFromModel(prop: KSPropertyDeclaration): String {
+        val propName = prop.simpleName.asString()
+        val propType = prop.type.resolve().declaration.toTypeName()
+        return when(propType) {
+            is ClassName -> {}
+            Dynamic -> {}
+            is LambdaTypeName -> {}
+            is ParameterizedTypeName -> {}
+            is TypeVariableName -> {}
+            is WildcardTypeName -> {}
+            else -> {}
+        }.toString()
     }
 
     private fun getJsonElementValue(elementName: String, propertyName: String): String {
