@@ -161,7 +161,11 @@ class FunctionProvider(
             .addStatement("${INDENTATION_8}return JSONObject().apply {").apply {
                 properties.forEachIndexed { _, prop ->
                     if (!hasAnnotation(prop)) {
-                        // Handle props here.
+                       addStatement(
+                           parseJson.buildJsonFromModel(prop),
+                           prop.simpleName.asString(),
+                           prop.type
+                       )
                     }
                 }
             }
