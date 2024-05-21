@@ -30,8 +30,8 @@ class JParseProcessor(
     }
 
     private fun generateSource(kClass: KSClassDeclaration) {
-        val className = kClass.simpleName.toString()
-        val packageName = kClass.packageName.toString()
+        val className = kClass.simpleName.asString()
+        val packageName = kClass.packageName.asString()
         val functionProvider = FunctionProvider(kClass)
         val fromJsonWithStringArgs = functionProvider.fromJsonWithStringArgs()
         val fromJsonWithJsonArgs = functionProvider.fromJsonWithJsonArgs()
